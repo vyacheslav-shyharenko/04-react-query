@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import fetchMovies, { type FetchMoviesParams } from '../../services/movieService';
 import type { Movie } from '../../types/movie';
@@ -9,6 +9,7 @@ import MovieModal from '../MovieModal/MovieModal';
 import SearchBar from '../SearchBar/SearchBar';
 
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
+
 import ReactPaginate from 'react-paginate';
 
 import css from './App.module.css';
@@ -28,16 +29,18 @@ const App = () => {
     placeholderData: keepPreviousData,
   });
 
-  if (data?.results.length === 0) {
-    toast('No movies found for your request.', {
-      icon: '😢',
-      style: {
-        borderRadius: '10px',
-        background: '#ff9797ff',
-        color: '#000000ff',
-      },
-    });
-  }
+  useEffect(() => {
+    if (data?.results.length === 0) {
+      toast('No movies found for your request.', {
+        icon: '😢',
+        style: {
+          borderRadius: '10px',
+          background: '#ff9797ff',
+          color: '#000000ff',
+        },
+      });
+    }
+  }, [data]);
 
   const { results = [], total_pages = 1 } = data ?? {};
 
